@@ -1,0 +1,12 @@
+version: '3.5'
+
+services:
+  app:
+    build: .
+    ports:
+      - 8080:8080
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '0.5GB'
