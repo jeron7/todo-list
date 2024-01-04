@@ -4,6 +4,7 @@ import dev.jeron7.todolist.application.useCases.task.CreateTask;
 import dev.jeron7.todolist.application.useCases.task.GetAllTasks;
 import dev.jeron7.todolist.application.useCases.task.GetTaskById;
 import dev.jeron7.todolist.application.useCases.task.UpdateTaskById;
+import dev.jeron7.todolist.application.useCases.user.DeleteById;
 import dev.jeron7.todolist.infrastructure.api.requests.CreateTaskRequest;
 import dev.jeron7.todolist.infrastructure.api.requests.UpdateByIdRequest;
 import dev.jeron7.todolist.infrastructure.api.responses.GetTaskByIdResponse;
@@ -23,13 +24,15 @@ public class TaskController {
     private final CreateTask createTask;
     private final GetTaskById getTaskById;
     private final GetAllTasks getAllTasks;
-    private final UpdateTaskById  updateTaskById;
+    private final UpdateTaskById updateTaskById;
+    private final DeleteById deleteById;
 
-    public TaskController(CreateTask createTask, GetTaskById getTaskById, GetAllTasks getAllTasks, UpdateTaskById updateTaskById) {
+    public TaskController(CreateTask createTask, GetTaskById getTaskById, GetAllTasks getAllTasks, UpdateTaskById updateTaskById, DeleteById deleteById) {
         this.createTask = Objects.requireNonNull(createTask);
         this.getTaskById = Objects.requireNonNull(getTaskById);
         this.getAllTasks = Objects.requireNonNull(getAllTasks);
         this.updateTaskById = Objects.requireNonNull(updateTaskById);
+        this.deleteById = Objects.requireNonNull(deleteById);
     }
 
     @PostMapping
@@ -68,5 +71,12 @@ public class TaskController {
                 request.ownerId());
         GetTaskById.Output output = updateTaskById.execute(input);
         return ResponseEntity.ok(GetTaskByIdResponse.from(output));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteById(@PathVariable("id") UUID id) {
+        deleteById.execute(id);
+
+        return ResponseEntity.ok().build();
     }
 }
